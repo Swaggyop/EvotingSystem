@@ -364,7 +364,7 @@ function AuthScreen({ goNext, setVoterData }) {
       </div>
 
       <div style={{ marginTop: 10, fontSize: 11.5, color: "var(--text-mute)" }}>
-        Register with any Voter ID, then try registering the same ID again to see the duplicate-ID rejection path. Requires the backend running at localhost:5000.
+        Register with any Voter ID, then try registering the same ID again to see the duplicate-ID rejection path.
       </div>
     </Shell>
   );
