@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: evoting-backend
+    runtime: python
+    rootDir: evoting/backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    envVars:
+      - key: SMTP_EMAIL
+        sync: false          # set manually in Render dashboard
+      - key: SMTP_APP_PASSWORD
+        sync: false          # set manually in Render dashboard

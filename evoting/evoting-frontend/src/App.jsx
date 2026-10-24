@@ -13,7 +13,7 @@ import {
    blind signatures, AES/RSA hybrid encryption, Paillier
    homomorphic tally, Shamir threshold decryption, Schnorr ZKP).
    ============================================================ */
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:5000/api";
 
 async function api(path, options = {}) {
   const res = await fetch(`${API_BASE}${path}`, {
@@ -384,8 +384,11 @@ function VerifyScreen({ goNext, voterData }) {
   const [loading, setLoading] = useState(false);
   const refs = useRef([]);
 
+  const hasSent = useRef(false);
+
   useEffect(() => {
-    if (!voterData?.voterIdHash) return;
+    if (!voterData?.voterIdHash || hasSent.current) return;
+    hasSent.current = true;
     api("/otp/send", { method: "POST", body: JSON.stringify({ voter_id_hash: voterData.voterIdHash }) })
       .then((d) => { setDemoOtp(d.demo_code); if (d.demo_code) setOtpCode(d.demo_code); setOtpSent(true); })
       .catch(() => setError("Could not reach the backend."));
