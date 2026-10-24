@@ -13,7 +13,7 @@ import {
    blind signatures, AES/RSA hybrid encryption, Paillier
    homomorphic tally, Shamir threshold decryption, Schnorr ZKP).
    ============================================================ */
-const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:5000/api";
+const API_BASE = import.meta.env.VITE_API_URL || (window.location.hostname === "localhost" ? "http://localhost:5000/api" : "https://evotingsystem-z4w9.onrender.com/api");
 
 async function api(path, options = {}) {
   const res = await fetch(`${API_BASE}${path}`, {
