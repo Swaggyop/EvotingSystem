@@ -6,7 +6,7 @@ Run with:  python app.py   (local dev)
            gunicorn "app:create_app()"   (production / Render)
 Serves on http://localhost:5000
 """
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 
 from models import init_db
@@ -24,7 +24,20 @@ def create_app():
     init_db()
 
     app = Flask(__name__)
-    CORS(app)  # demo-only: open CORS so the frontend dev server can call this API
+
+    # ── CORS — allow every origin (demo/academic project) ──────────
+    CORS(app, resources={r"/api/*": {"origins": "*"}},
+         supports_credentials=False)
+
+    # Belt-and-suspenders: guarantee the headers even if flask-cors
+    # misses a route (e.g. on Render/gunicorn edge cases).
+    @app.after_request
+    def add_cors_headers(response):
+        origin = request.headers.get("Origin", "*")
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
+        response.headers["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS"
+        return response
 
     app.register_blueprint(auth_bp, url_prefix="/api")
     app.register_blueprint(ballot_bp, url_prefix="/api")
